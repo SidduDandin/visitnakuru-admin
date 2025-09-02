@@ -66,7 +66,7 @@ export default function LoginForm() {
           {/* Logo / Branding */}
           <div className="flex flex-col items-center mb-6">
           <img
-               src="/visitnakuru.jpg" 
+               src="./visitnakuru.jpg" 
                alt="Visit Nakuru Logo"
                className="h-20 w-20 object-contain rounded-full shadow-md"
           />
