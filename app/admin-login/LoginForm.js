@@ -1,10 +1,10 @@
 'use client';
+
 import { useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { useRouter } from 'next/navigation';
 import { Lock, User } from 'lucide-react';
-
 
 export default function LoginForm() {
   const [username, setUsername] = useState('');
@@ -14,7 +14,8 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-
+  const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
   function validateForm() {
     const newErrors = {};
@@ -36,23 +37,26 @@ export default function LoginForm() {
       return;
     }
     setErrors({});
+
     try {
       setLoading(true);
-     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ username, password }),
-  credentials: "include",   // ✅ critical for cookies
-});
+      const res = await fetch(`${API_BASE_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+        credentials: 'include', // ✅ important for cookies
+      });
 
       const data = await res.json();
+
       if (!res.ok) {
         setServerErr(data.error || 'Login failed');
         return;
       }
+
       router.push('/admin');
     } catch (e) {
-      setServerErr('Network error');
+      setServerErr('Network error, please try again');
     } finally {
       setLoading(false);
     }
@@ -65,15 +69,17 @@ export default function LoginForm() {
         <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md border border-gray-100">
           {/* Logo / Branding */}
           <div className="flex flex-col items-center mb-6">
-          <img
-               src="./visitnakuru.jpg" 
-               alt="Visit Nakuru Logo"
-               className="h-20 w-20 object-contain rounded-full shadow-md"
-          />
+            <img
+              src="/visitnakuru.jpg" // ✅ must be in /public
+              alt="Visit Nakuru Logo"
+              className="h-20 w-20 object-contain rounded-full shadow-md"
+            />
             <h2 className="mt-4 text-2xl font-semibold text-gray-800">
               Admin Portal
             </h2>
-            <p className="text-sm text-gray-500">Secure login for administrators</p>
+            <p className="text-sm text-gray-500">
+              Secure login for administrators
+            </p>
           </div>
 
           {/* Server Error */}
@@ -98,6 +104,7 @@ export default function LoginForm() {
                       : 'border-gray-300 focus:ring-indigo-500'
                   } focus:ring-2`}
                   placeholder="Username"
+                  aria-label="Username"
                 />
               </div>
               {errors.username && (
@@ -119,6 +126,7 @@ export default function LoginForm() {
                       : 'border-gray-300 focus:ring-indigo-500'
                   } focus:ring-2`}
                   placeholder="Password"
+                  aria-label="Password"
                 />
               </div>
               {errors.password && (
