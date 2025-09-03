@@ -14,8 +14,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL || 'https://visitnakuru-backend-nodejs.onrender.com';
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
   function validateForm() {
     const newErrors = {};
@@ -40,7 +39,7 @@ export default function LoginForm() {
 
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/login`, {
+      const res = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
